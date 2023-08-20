@@ -27,3 +27,5 @@ im.show()
 #             im.putpixel((j, i), (0, 0, 0))
 
 # im.show()
+
+# hint : try requesting image and using base64?
