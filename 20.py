@@ -1,4 +1,7 @@
 from PIL import Image, ImageEnhance
+from requests.auth import HTTPBasicAuth
+import requests
+import base64
 
 
 data = open('./unreal.jpg', 'rb')
@@ -11,14 +14,14 @@ im = Image.open('./unreal.jpg', 'r')
 # im = im.transpose(Image.Transpose.ROTATE_180)
 im = im.crop((57, 0, 290, 75))
 red, green, blue = im.split()
-red.show()
-green.show()
-blue.show()
+# red.show()
+# green.show()
+# blue.show()
 
 w, h = im.size
 
 # im.transpose(Image.Transpose.ROTATE_180)
-im.show()
+# im.show()
 
 # for i in range(h):
 #     for j in range(w):
@@ -29,3 +32,8 @@ im.show()
 # im.show()
 
 # hint : try requesting image and using base64?
+auth = HTTPBasicAuth('butter', 'fly')
+r = requests.get('http://www.pythonchallenge.com/pc/hex/unreal.jpg', auth=auth)
+# print(f'Respoinse: {r}, Content: {r.content}')
+data = base64.b64decode(r.content)
+print(data.decode())
