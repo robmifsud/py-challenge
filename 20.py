@@ -33,7 +33,8 @@ w, h = im.size
 
 # hint : try requesting image and using base64?
 auth = HTTPBasicAuth('butter', 'fly')
-r = requests.get('http://www.pythonchallenge.com/pc/hex/unreal.jpg', auth=auth)
-# print(f'Respoinse: {r}, Content: {r.content}')
+headers = {'Range' : 'bytes=30202-60404'}
+r = requests.get('http://www.pythonchallenge.com/pc/hex/unreal.jpg', auth=auth, headers=headers)
+print(f'Respoinse: {r}, Headers: {r.headers}, Content: {r.content}')
 data = base64.b64decode(r.content)
-print(data.decode())
+# print(data)
