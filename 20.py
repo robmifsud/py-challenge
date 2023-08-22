@@ -1,40 +1,29 @@
-from PIL import Image, ImageEnhance
 from requests.auth import HTTPBasicAuth
 import requests
-import base64
+import re
 
-
-data = open('./unreal.jpg', 'rb')
-im = Image.open('./unreal.jpg', 'r')
-# print(data.read())
-
-# im = im.convert('1')
-# fil = ImageEnhance.Contrast(im)
-# im = fil.enhance(1.25)
-# im = im.transpose(Image.Transpose.ROTATE_180)
-im = im.crop((57, 0, 290, 75))
-red, green, blue = im.split()
-# red.show()
-# green.show()
-# blue.show()
-
-w, h = im.size
-
-# im.transpose(Image.Transpose.ROTATE_180)
-# im.show()
-
-# for i in range(h):
-#     for j in range(w):
-#         print(im.getpixel((j, i)))
-#         if im.getpixel((j, i)) == (167, 195, 206):
-#             im.putpixel((j, i), (0, 0, 0))
-
-# im.show()
 
 # hint : try requesting image and using base64?
 auth = HTTPBasicAuth('butter', 'fly')
-headers = {'Range' : 'bytes=30202-60404'}
+
+r = requests.get('http://www.pythonchallenge.com/pc/hex/unreal.jpg', auth=auth)
+range = r.headers.get('Content-Range')
+start = re.findall('(?<=-)\d+', range)[0]
+while True:
+    headers = {'Range' : f'bytes={int(start)+1}-'}
+    req = requests.get('http://www.pythonchallenge.com/pc/hex/unreal.jpg', auth=auth, headers=headers)
+    if len(req.content) != 0:
+        print(req.headers)
+        range = req.headers.get('Content-Range')
+        start = re.findall('(?<=-)\d+', range)[0]
+    else:
+        break
+
+headers = {'Range' : 'bytes=1152983631-'}
 r = requests.get('http://www.pythonchallenge.com/pc/hex/unreal.jpg', auth=auth, headers=headers)
 print(f'Respoinse: {r}, Headers: {r.headers}, Content: {r.content}')
-data = base64.b64decode(r.content)
-# print(data)
+
+# invader in reverse: redavni
+# and it is hiding at 1152983631
+file = open('./20.zip', 'wb')
+file.write(r.content)
